@@ -9,4 +9,3 @@ jobs:
     resource_class: circle-suzuki/test-container-agent
     steps:
       - run: echo "Hi I'm on Runners!"
-
