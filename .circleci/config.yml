@@ -1,12 +1,14 @@
 version: 2.1
-workflows:
-  testing:
-    jobs:
-      - runner-test
+
 jobs:
-  runner-test:
-    machine: true
+  build:
+    docker:
+      - image: cimg/base:2021.11
     resource_class: circle-suzuki/test-container-agent
     steps:
       - run: echo "Hi I'm on Runners!"
 
+workflows:
+  build-workflow:
+    jobs:
+      - build
