@@ -6,7 +6,7 @@ jobs:
       - image: cimg/base:2021.11
     resource_class: circle-suzuki/test-container-agent
     steps:
-      - run: echo "Hi I'm on Runners!"
+      - run: echo "Hi I'm on Container Agent!"
 
 workflows:
   build-workflow:
