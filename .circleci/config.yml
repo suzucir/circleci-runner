@@ -1,16 +1,12 @@
 version: 2.1
-
 jobs:
   build:
     docker:
-      - image: cimg/base:2021.11
-    resource_class: circle-suzuki/test-container-agent
+      - image: cimg/base:current
+    resource_class: circle-suzuki/container-runner
     steps:
-      - run: echo "Hi I'm on Container Agent!"
-
+      - run: echo "Hi I'm on a Container Runner!"
 workflows:
   build-workflow:
     jobs:
       - build
-
-
