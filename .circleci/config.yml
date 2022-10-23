@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: cimg/base:current
-    resource_class: circle-suzuki/container-runner
+    resource_class: circle-suzuki/container-agent
     steps:
       - run: echo "Hi I'm on a Container Runner!"
 workflows:
