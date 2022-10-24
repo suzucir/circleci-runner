@@ -8,4 +8,4 @@ jobs:
     machine: true
     resource_class: circle-suzuki/test-container-agent
     steps:
-      - run: sleep 61
+      - run: sleep 60
