@@ -1,12 +1,11 @@
 version: 2.1
+workflows:
+  testing:
+    jobs:
+      - runner-test
 jobs:
-  build:
-    docker:
-      - image: cimg/base:current
-    resource_class: circle-suzuki/container-agent
+  runner-test:
+    machine: true
+    resource_class: circle-suzuki/test-container-agent
     steps:
       - run: sleep 60
-workflows:
-  build-workflow:
-    jobs:
-      - build
