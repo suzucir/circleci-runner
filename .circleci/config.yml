@@ -5,7 +5,7 @@ jobs:
       - image: cimg/base:current
     resource_class: circle-suzuki/container-agent
     steps:
-      - run: sleep 59
+      - run: sleep 60
 workflows:
   build-workflow:
     jobs:
