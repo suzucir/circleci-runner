@@ -6,6 +6,7 @@ jobs:
     resource_class: circle-suzuki/winserver2019
     steps:
       - run: echo "Hi I'm on a Container Runner!"
+      - run: Write-Host 'Hello, Windows'
 workflows:
   build-workflow:
     jobs:
