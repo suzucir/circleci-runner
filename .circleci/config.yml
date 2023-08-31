@@ -1,13 +1,11 @@
 version: 2.1
+workflows:
+  testing:
+    jobs:
+      - runner-test
 jobs:
-  build:
-    docker:
-      - image: cimg/base:current
+  runner-test:
+    machine: true
     resource_class: circle-suzuki/winserver2019
     steps:
-      - run: echo "Hi I'm on a Container Runner!"
-      - run: Write-Host 'Hello, Windows'
-workflows:
-  build-workflow:
-    jobs:
-      - build
+      - run: echo "Hi I'm on Runners!"
