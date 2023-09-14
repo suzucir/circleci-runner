@@ -1,11 +1,85 @@
 version: 2.1
-workflows:
-  testing:
-    jobs:
-      - runner-test
+
+orbs:
+  windows: circleci/windows@2.2.0
+
 jobs:
-  runner-test:
+  test-2:
+    executor:
+      name: windows/default
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dotnet-packages-v1-{{ checksum "SimpleCalc/SimpleCalc.csproj" }}
+      - run:
+          name: "Install project dependencies"
+          command: dotnet.exe restore
+      - run: dotnet.exe test -v n
+  test:
     machine: true
     resource_class: circle-suzuki/winserver2019
     steps:
-      - run: echo "Hi I'm on Runners!"
+      - checkout
+      - restore_cache:
+          keys:
+            - dotnet-packages-v1-{{ checksum "SimpleCalc/SimpleCalc.csproj" }}
+      - run:
+          name: "Install project dependencies"
+          command: dotnet.exe restore
+      - save_cache:
+          paths:
+            - C:\Users\circleci\.nuget\packages
+          key: dotnet-packages-v1-{{ checksum "SimpleCalc/SimpleCalc.csproj" }}
+      - run:
+          name: "Run Application Tests"
+          command: dotnet.exe test -v n --results-directory:test_coverage --collect:"Code Coverage"
+      - store_artifacts:
+          path: C:\Users\circleci\project\test_coverage
+  build:
+    description: Build application with Release configuration
+    executor:
+      name: windows/default
+    steps:
+      - checkout
+      - run:
+          name: "Build Application according to some given configuration"
+          command: dotnet.exe build --configuration Release
+  runner-test:
+    resource_class: 'circle-suzuki/winserver2019'
+    machine: 
+      image: 'circle-suzuki/winserver2019'
+      shell: powershell.exe
+    steps:
+      - run: Write-Host 'Hello, Windows'
+      - run: $env:PATH
+      - run:
+          name: Get circleci User PATH
+          command: |
+            Get-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Environment\' -Name PATH
+      - run:
+          name: "Update PATH of circleci user"
+          command: |
+            $userPath = [Environment]::GetEnvironmentVariable("PATH", "User")
+            # Check if the string already exists in the user-specific PATH
+            if ($userPath.Contains("C:\Windows\Microsoft.NET\Framework64\v4.0.30319\")) {
+                Write-Host "The specified string already exists in the user's PATH variable."
+            }
+            else {
+                $newPath = "$userPath;C:\Windows\Microsoft.NET\Framework64\v4.0.30319\"
+                [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
+                Write-Host "The specified string has been added to the user's PATH variable."
+            }
+      - run:
+          name: Get circleci User PATH after UPDATE
+          command: |
+            Get-ItemProperty -Path 'Registry::HKEY_CURRENT_USER\Environment\' -Name PATH
+workflows:
+  build-and-test:
+    jobs:
+      # - test-2
+      # - test
+      # - build:
+      #     requires:
+      #       - test
+      - runner-test
